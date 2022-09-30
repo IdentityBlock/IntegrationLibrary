@@ -1,26 +1,38 @@
 const qrgen = require('qrcode');
 
 function request(info, data) {
+    /*
+        Function provided to third-party service providers.
+        info : Name of the organization (String)
+        data : Data fields requested by the third-party service provider
+    */
+    console.log(typeof(data));
+
+    if (typeof(info) != "string") {
+        return "info must be a string";
+    }
+
+    if (typeof(info) != "object") {
+        return "info must be an object";
+    }
+
     return core(info, data);
 }
 
 function generateQR(token, data) {
     let qr;
 
-    //data["token"] = token;
     let qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
 
-    //console.log(JSON.stringify(data));
-    console.log(qrData);
+    //console.log(qrData);
 
     qrgen.toDataURL(qrData, function (err, url) {
         if (err) {
-            console.log("Error");
+            console.log("Error generating QR code");
         }
         qr = url;
     });
 
-    console.log(qr)
     return qr;
 }
 
@@ -31,8 +43,6 @@ function requestData() {
 function core(info, data) {
     let token = generateToken(info);
     let qr = generateQR(token, data);
-
-    //console.log(qr);
 
     return qr;
 }
@@ -46,4 +56,4 @@ function generateToken(info) {
     return dateTime + info;
 }
 
-console.log(request("abc", ["a", "b"]));
+console.log(request("ABCBank", ["Name", "Email"]));
