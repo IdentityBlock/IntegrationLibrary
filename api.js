@@ -8,20 +8,19 @@ function generateQR(token, data) {
     let qr;
 
     //data["token"] = token;
-    qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
+    let qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
 
     //console.log(JSON.stringify(data));
     console.log(qrData);
 
-    qrgen.toString(qrData, {type:'terminal'}, function (err, url) {
+    qrgen.toDataURL(qrData, function (err, url) {
         if (err) {
             console.log("Error");
         }
         qr = url;
-        //console.log(url)
     });
 
-    //console.log(qr)
+    console.log(qr)
     return qr;
 }
 
