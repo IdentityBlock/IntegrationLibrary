@@ -4,24 +4,16 @@ function request(info, data) {
     return core(info, data);
 }
 
-function generateQR(token, data) {
+async function generateQR(token, data) {
     let qr;
 
     //data["token"] = token;
-    let qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
+    const qrData = '{"token":"' + token + '"' + ',"information":' + JSON.stringify(data) + '}';
 
     //console.log(JSON.stringify(data));
-    console.log(qrData);
 
-    qrgen.toDataURL(qrData, function (err, url) {
-        if (err) {
-            console.log("Error");
-        }
-        qr = url;
-    });
-
-    console.log(qr)
-    return qr;
+    let qrCode = await qrgen.toDataURL(qrData);
+    return qrCode;
 }
 
 function requestData() {
@@ -46,4 +38,8 @@ function generateToken(info) {
     return dateTime + info;
 }
 
-console.log(request("abc", ["a", "b"]));
+//console.log(request("abc", ["a", "b"]));
+
+module.exports = {
+    request
+};
