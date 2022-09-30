@@ -6,20 +6,22 @@ function request(info, data) {
         info : Name of the organization (String)
         data : Data fields requested by the third-party service provider
     */
-    console.log(typeof(data));
 
     if (typeof(info) != "string") {
         return "info must be a string";
     }
 
-    if (typeof(info) != "object") {
+    /*if (typeof(info) != "object") {
         return "info must be an object";
-    }
+    }*/
 
     return core(info, data);
 }
 
 function generateQR(token, data) {
+    /*
+        Generate a QR code with the given information
+    */
     let qr;
 
     let qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
@@ -30,6 +32,7 @@ function generateQR(token, data) {
         if (err) {
             console.log("Error generating QR code");
         }
+        //console.log(url);
         qr = url;
     });
 
@@ -37,10 +40,16 @@ function generateQR(token, data) {
 }
 
 function requestData() {
+    /*
+        Function to interface with Smart Contracts
+    */
 
 }
 
 function core(info, data) {
+    /*
+        Call necessary functions
+    */
     let token = generateToken(info);
     let qr = generateQR(token, data);
 
@@ -48,6 +57,9 @@ function core(info, data) {
 }
 
 function generateToken(info) {
+    /*
+        Generate a token with the given information
+    */
     let current = new Date();
     let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
     let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
