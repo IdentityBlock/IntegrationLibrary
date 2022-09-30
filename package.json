@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/IdentityBlock/IntegrationLibrary/issues"
   },
-  "homepage": "https://github.com/IdentityBlock/IntegrationLibrary#readme"
+  "homepage": "https://github.com/IdentityBlock/IntegrationLibrary#readme",
+  "dependencies": {
+    "qrcode": "^1.5.1"
+  }
 }
