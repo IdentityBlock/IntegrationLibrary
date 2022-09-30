@@ -1,0 +1,19 @@
+{
+  "name": "integrationlibrary",
+  "version": "1.0.0",
+  "description": "Integration Library for IdentityBlock",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IdentityBlock/IntegrationLibrary.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IdentityBlock/IntegrationLibrary/issues"
+  },
+  "homepage": "https://github.com/IdentityBlock/IntegrationLibrary#readme"
+}
