@@ -69,7 +69,3 @@ function generateToken(info) {
 }
 
 //console.log(request("abc", ["a", "b"]));
-
-module.exports = {
-    request
-};
