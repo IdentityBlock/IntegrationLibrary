@@ -18,25 +18,25 @@ async function request(info, data, callback) {
     return core(info, data, callback);
 }
 
-function generateQR(token, data) {
+async function generateQR(token, data) {
     /*
         Generate a QR code with the given information
     */
     let qr;
 
-    let qrData = '["Token":"' + token + '"' + ',"Information":' + JSON.stringify(data) + ']';
+    let qrData = '{"token":"' + token + '"' + ',"information":' + JSON.stringify(data) + '}';
 
     //console.log(qrData);
 
-    qrgen.toDataURL(qrData, function (err, url) {
-        if (err) {
-            console.log("Error generating QR code");
-        }
+    //qrgen.toDataURL(qrData, function (err, url) {
+        //if (err) {
+            //console.log("Error generating QR code");
+        //}
         //console.log(url);
-        qr = url;
-    });
+        //qr = url;
+    //});
 
-    return qr;
+    return await qrgen.toDataURL(qrData);
 }
 
 async function requestData(data) {
@@ -58,7 +58,7 @@ async function requestData(data) {
 
 async function core(info, data, callback) {
     let token = generateToken(info);
-    let qr = generateQR(token, data);
+    let qr = await generateQR(token, data);
 
     callback({}, qr);
 
@@ -78,8 +78,10 @@ function generateToken(info) {
 }
 
 function sampleData() {
-    return {"a" : "abc", "b" : "bcd"};
+    return {"Name" : "ABC", "Address" : "A, B, C"};
 }
 
-request("a", ["b"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
+//request("Bank", ["Name", "Address"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
 //console.log(request("abc", ["a", "b"]));
+
+exports.request = request;
