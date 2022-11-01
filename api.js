@@ -68,4 +68,8 @@ function generateToken(info) {
     return dateTime + info;
 }
 
-console.log(request("ABCBank", ["Name", "Email"]));
+//console.log(request("abc", ["a", "b"]));
+
+module.exports = {
+    request
+};
