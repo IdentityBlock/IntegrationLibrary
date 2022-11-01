@@ -1,21 +1,21 @@
 const qrgen = require('qrcode');
 
-function request(info, data) {
+async function request(info, data, callback) {
     /*
         Function provided to third-party service providers.
         info : Name of the organization (String)
         data : Data fields requested by the third-party service provider
     */
 
-    if (typeof(info) != "string") {
-        return "info must be a string";
-    }
+    //if (typeof(info) != "string") {
+        //return "info must be a string";
+    //}
 
     /*if (typeof(info) != "object") {
         return "info must be an object";
     }*/
 
-    return core(info, data);
+    return core(info, data, callback);
 }
 
 function generateQR(token, data) {
@@ -39,21 +39,30 @@ function generateQR(token, data) {
     return qr;
 }
 
-function requestData() {
-    /*
-        Function to interface with Smart Contracts
-    */
+async function requestData(data) {
+    outData = {}
+    sample = sampleData();
 
+    for (let x in data) {
+        outData[data[x]] = sample[data[x]];
+    }
+
+    let myPromise = new Promise(function(resolve) {
+        setTimeout(function() {resolve();}, 5000);
+    });
+
+    await myPromise;
+
+    return outData;
 }
 
-function core(info, data) {
-    /*
-        Call necessary functions
-    */
+async function core(info, data, callback) {
     let token = generateToken(info);
     let qr = generateQR(token, data);
 
-    return qr;
+    callback({}, qr);
+
+    return await requestData(data);
 }
 
 function generateToken(info) {
@@ -68,4 +77,9 @@ function generateToken(info) {
     return dateTime + info;
 }
 
+function sampleData() {
+    return {"a" : "abc", "b" : "bcd"};
+}
+
+request("a", ["b"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
 //console.log(request("abc", ["a", "b"]));
