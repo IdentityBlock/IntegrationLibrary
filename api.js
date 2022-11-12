@@ -99,18 +99,27 @@ function sampleData() {
 //request("Bank", ["Name", "Address"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
 //console.log(request("abc", ["a", "b"]));
 async function loadContract() {
-  if (!fs.existsSync("deployed-contract")) {
-    deployContract().then((depObj) => {
-      fs.writeFileSync("deployed-contract", JSON.stringify(depObj));
-    });
+  if (!fs.existsSync("./deployed-contract")) {
+    return deployContract()
+      .then((depObj) => {
+        fs.writeFileSync("./deployed-contract", JSON.stringify(depObj));
+      })
+      .then(async () => {
+        const contractAddress = await JSON.parse(
+          fs.readFileSync("./deployed-contract", {
+            encoding: "utf8",
+          })
+        );
+        return await contractAddress;
+      });
+  } else {
+    const contractAddress = await JSON.parse(
+      fs.readFileSync("./deployed-contract", {
+        encoding: "utf8",
+      })
+    );
+    return contractAddress;
   }
-  const contractAddress = JSON.parse(
-    fs.readFileSync("deployed-contract", {
-      encoding: "utf8",
-    })
-  );
-
-  return contractAddress;
 }
 
 exports.request = request;
