@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/IdentityBlock/IntegrationLibrary#readme",
   "dependencies": {
-    "qrcode": "^1.5.1",
+    "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
-    "solc": "^0.8.17",
+    "qrcode": "^1.5.1",
     "web3": "^1.8.1"
   }
 }
