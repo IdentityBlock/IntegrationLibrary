@@ -1,6 +1,7 @@
 const qrgen = require("qrcode");
 const fs = require("fs");
 const deployContract = require("./contract");
+const getVerifiedToken = require("./contract");
 
 async function request(info, data, callback) {
   /*
@@ -98,6 +99,7 @@ function sampleData() {
 
 //request("Bank", ["Name", "Address"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
 //console.log(request("abc", ["a", "b"]));
+
 async function loadContract() {
   if (!fs.existsSync("./deployed-contract")) {
     return deployContract()
@@ -122,9 +124,26 @@ async function loadContract() {
   }
 }
 
+async function getVerifiedUserAddressFromToken(_token) {
+  const contractAddress = await JSON.parse(
+    fs.readFileSync("./deployed-contract", {
+      encoding: "utf8",
+    })
+  );
+
+  return getVerifiedToken(
+    _token,
+    contractAddress["verifier-address"],
+    contractAddress["contract-address"]
+  ).then((response) => {
+    return response;
+  });
+}
+
 exports.request = request;
 exports.loadContract = loadContract;
+exports.getVerifiedUserAddressFromToken = getVerifiedUserAddressFromToken;
 
-// loadContract().then((depObj) => {
-//   console.log(depObj);
-// });
+// loadContract().then(console.log);
+
+// getVerifiedUserAddressFromToken("NewToken").then(console.log);
