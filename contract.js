@@ -14,13 +14,26 @@ deployContract = async () => {
 
   const account = await web3.eth.accounts.create();
 
-  await web3.eth.sendTransaction({
-    from: fundingAccount.address,
-    to: account.address,
-    value: 10000000000000000000, // 10**19 equivalent to 10 ether
-  });
+  // console.log(account.privateKey);
+  // console.log(account.address);
+  // console.log(fundingAccount.address);
 
-  const transaction = verifierContract.deploy({
+  const initialTxSign = await web3.eth.accounts.signTransaction(
+    {
+      to: account.address,
+      value: "500000000000000000", // equivalent to 0.5 ether
+      gas: 2000000,
+    },
+    process.env.fundingAccount
+  );
+  // console.log(initialTxSign);
+  const initialRecipt = await web3.eth.sendSignedTransaction(
+    initialTxSign.rawTransaction
+  );
+
+  // console.log(initialRecipt);
+
+  const transaction = await verifierContract.deploy({
     data: contract.bytecode,
   });
 
