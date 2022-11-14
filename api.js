@@ -28,7 +28,13 @@ async function generateQR(token, data) {
   let qr;
 
   let qrData =
-    '{"token":"' + token + '"' + ',"information":' + JSON.stringify(data) + "}";
+    '{"verifier-name": ' +
+    '"Verifier Name"' +
+    ' , "verifier-contract": ' +
+    '"0xA726829e464caF30adB61CC5DFa0417206d71903"' +
+    ' , "token": ' +
+    '"New Sample Token"' +
+    "}";
 
   //console.log(qrData);
 
