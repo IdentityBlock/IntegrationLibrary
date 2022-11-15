@@ -1,111 +1,18 @@
 const qrgen = require("qrcode");
 const fs = require("fs");
+const crypto = require("crypto");
+
 const deployContract = require("./contract");
 const getVerifiedToken = require("./contract");
 
-async function request(info, data, callback) {
-  /*
-        Function provided to third-party service providers.
-        info : Name of the organization (String)
-        data : Data fields requested by the third-party service provider
-    */
-
-  //if (typeof(info) != "string") {
-  //return "info must be a string";
-  //}
-
-  /*if (typeof(info) != "object") {
-        return "info must be an object";
-    }*/
-
-  return core(info, data, callback);
-}
-
-async function generateQR(token, data) {
-  /*
-        Generate a QR code with the given information
-    */
-  let qr;
-
-  let qrData =
-    '{"verifier-name": ' +
-    '"Verifier Name"' +
-    ' , "verifier-contract": ' +
-    '"0xA726829e464caF30adB61CC5DFa0417206d71903"' +
-    ' , "token": ' +
-    '"New Sample Token"' +
-    "}";
-
-  //console.log(qrData);
-
-  //qrgen.toDataURL(qrData, function (err, url) {
-  //if (err) {
-  //console.log("Error generating QR code");
-  //}
-  //console.log(url);
-  //qr = url;
-  //});
-
-  return await qrgen.toDataURL(qrData);
-}
-
-async function requestData(data) {
-  outData = {};
-  sample = sampleData();
-
-  for (let x in data) {
-    outData[data[x]] = sample[data[x]];
-  }
-
-  let myPromise = new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve();
-    }, 5000);
-  });
-
-  await myPromise;
-
-  return outData;
-}
-
-async function core(info, data, callback) {
-  let token = generateToken(info);
-  let qr = await generateQR(token, data);
-
-  callback({}, qr);
-
-  return await requestData(data);
-}
-
-function generateToken(info) {
-  /*
-        Generate a token with the given information
-    */
-  let current = new Date();
-  let cDate =
-    current.getFullYear() +
-    "-" +
-    (current.getMonth() + 1) +
-    "-" +
-    current.getDate();
-  let cTime =
-    current.getHours() +
-    ":" +
-    current.getMinutes() +
-    ":" +
-    current.getSeconds();
-  let dateTime = cDate + "t" + cTime;
-
-  return dateTime + info;
-}
-
-function sampleData() {
-  return { Name: "ABC", Address: "A, B, C" };
-}
-
-//request("Bank", ["Name", "Address"], function(err, data) {console.log(data)}).then(function(res) {console.log(res)});
-//console.log(request("abc", ["a", "b"]));
-
+/**
+ *
+ * @returns the address of the smart contract related to the caller of the function.
+ * If the caller has no smart contract deployed for him,
+ *    function creates a new Ethereum account for user,
+ *    deploys a new contract from the newly created account,
+ *    and returns the address of the new smart contract.
+ */
 async function loadContract() {
   if (!fs.existsSync("./deployed-contract")) {
     return deployContract()
@@ -130,26 +37,101 @@ async function loadContract() {
   }
 }
 
-async function getVerifiedUserAddressFromToken(_token) {
-  const contractAddress = await JSON.parse(
+/**
+ *
+ * @param {String} _verifierName The name of the verifying institution.
+ * Will be prompted to the user who scans the QR code.
+ * @returns QR code URI that contains the details in the format accepts by the iBlock mobile application
+ */
+async function getQR(_verifierName) {
+  const deployedContract = await JSON.parse(
     fs.readFileSync("./deployed-contract", {
       encoding: "utf8",
     })
   );
 
-  return getVerifiedToken(
-    _token,
-    contractAddress["verifier-address"],
-    contractAddress["contract-address"]
-  ).then((response) => {
-    return response;
-  });
+  const token =
+    new Date().toISOString() + crypto.randomBytes(22).toString("hex");
+  const qrData =
+    '{"verifier-name": "' +
+    _verifierName +
+    '" , "verifier-contract": "' +
+    deployedContract["contract-address"] +
+    '" , "token": "' +
+    token +
+    '"}';
+
+  return await qrgen.toDataURL(qrData);
 }
 
-exports.request = request;
+/**
+ *
+ * @param {String} _token a token previously generated using the iBlock API to identify the verification transaction
+ * @param {String[]} _listOfDataFields a list of data fields of users which need to be fetched from the blockchain
+ * currently allows the set of ["name","email","DOB","country","mobile","gender"] only.
+ * @returns personal data JSON object of the user who approved to share his personal details for the given token issuer.
+ * If the user rejected the permission, 'REJECTED' is returned,
+ * If the user has not approved or rejected yet, 'PENDING' is returned.
+ */
+async function getTokenVerified(_token, _listOfDataFields) {
+  const deployedContract = await JSON.parse(
+    fs.readFileSync("./deployed-contract", {
+      encoding: "utf8",
+    })
+  );
+
+  const response = await getVerifiedToken(
+    _token,
+    deployedContract["verifier-address"],
+    deployedContract["contract-address"]
+  );
+
+  // console.log(response);
+
+  if (response == "PENDING" || response == "REJECTED") {
+    return response;
+  }
+  let data = {};
+
+  for (let _field in _listOfDataFields) {
+    let field = _listOfDataFields[_field].toLowerCase();
+    // console.log(field);
+    switch (field) {
+      case "name":
+        data[field] = "dummy name";
+        // data[field] = await getUserName(response);
+        break;
+      case "email":
+        data[field] = "dummy email";
+        // data[field] = await getUserEmail(response);
+        break;
+      case "dob":
+        data[field] = "dummy DOB";
+        // data[field] = await getUserDOB(response);
+        break;
+      case "country":
+        data[field] = "dummy country";
+        // data[field] = await getUserCountry(response);
+        break;
+      case "mobile":
+        data[field] = "dummy mobile";
+        // data[field] = await getUserMobile(response);
+        break;
+      case "gender":
+        data[field] = "dummy gender";
+        // data[field] = await getUserGender(response);
+        break;
+      default:
+        data[field] = "cannot fetch from iblock API";
+    }
+  }
+  return data;
+}
+
 exports.loadContract = loadContract;
-exports.getVerifiedUserAddressFromToken = getVerifiedUserAddressFromToken;
+exports.getQR = getQR;
+exports.getTokenVerified = getTokenVerified;
 
 // loadContract().then(console.log);
-
-// getVerifiedUserAddressFromToken("NewToken").then(console.log);
+// getQR().then(console.log)
+// getTokenVerified("sample-token",['sample','fields']).then(console.log)

@@ -1,3 +1,8 @@
+/**
+ * Containes all the functions related to web3 integration
+ * deploying and interacting with smart contract
+ */
+
 const Web3 = require("web3");
 require("dotenv").config();
 
@@ -69,8 +74,17 @@ getVerifiedToken = async (
     .getVerifiedUserAddress(_token)
     .call({ from: _verifierAccountAddress });
 
+  // const possibilites = [
+  //   "REJECTED",
+  //   "0x0000000000000000000000000000000000000000",
+  //   "0xf32cfe97272a462915D5lf85dBb01797f0249635",
+  // ];
+  // const userSmartContractAddress =
+  //   possibilites[Math.floor(Math.random() * possibilites.length)];
+
   if (userSmartContractAddress === "0x0000000000000000000000000000000000000000")
-    return false;
+    return "PENDING";
+
   return userSmartContractAddress;
 };
 
