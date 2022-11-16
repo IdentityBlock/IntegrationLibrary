@@ -6,22 +6,21 @@
 const Web3 = require("web3");
 require("dotenv").config();
 
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.wsUrl));
+const web3 = new Web3(
+  new Web3.providers.HttpProvider(process.env.IBLOCK_WSURL)
+);
 
 const contract = require("./bin/Verifier.json");
+const userContract = require("./bin/User.json");
 
 deployContract = async () => {
   let verifierContract = await new web3.eth.Contract(contract.abi);
 
   const fundingAccount = await web3.eth.accounts.privateKeyToAccount(
-    process.env.fundingAccount
+    process.env.FUNDING_ACCOUNT
   );
 
   const account = await web3.eth.accounts.create();
-
-  // console.log(account.privateKey);
-  // console.log(account.address);
-  // console.log(fundingAccount.address);
 
   const initialTxSign = await web3.eth.accounts.signTransaction(
     {
@@ -31,12 +30,9 @@ deployContract = async () => {
     },
     process.env.fundingAccount
   );
-  // console.log(initialTxSign);
   const initialRecipt = await web3.eth.sendSignedTransaction(
     initialTxSign.rawTransaction
   );
-
-  // console.log(initialRecipt);
 
   const transaction = await verifierContract.deploy({
     data: contract.bytecode,
@@ -74,27 +70,97 @@ getVerifiedToken = async (
     .getVerifiedUserAddress(_token)
     .call({ from: _verifierAccountAddress });
 
-  // const possibilites = [
-  //   "REJECTED",
-  //   "0x0000000000000000000000000000000000000000",
-  //   "0xf32cfe97272a462915D5lf85dBb01797f0249635",
-  // ];
-  // const userSmartContractAddress =
-  //   possibilites[Math.floor(Math.random() * possibilites.length)];
-
   if (userSmartContractAddress === "0x0000000000000000000000000000000000000000")
     return "PENDING";
 
   return userSmartContractAddress;
 };
 
-// deployContract().then(console.log);
+getUserName = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
 
-// getVerifiedToken(
-//   "NewToken",
-//   "0x1b73553c039EC59685E0428Df32230dfC0441887",
-//   "0xA726829e464caF30adB61CC5DFa0417206d71903"
-// ).then(console.log);
+  let userName = await contractInstance.methods
+    .getName()
+    .call({ from: _verifierAccountAddress });
 
-module.exports = deployContract;
-module.exports = getVerifiedToken;
+  return userName;
+};
+
+getUserEmail = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
+
+  let userEmail = await contractInstance.methods
+    .getEmail()
+    .call({ from: _verifierAccountAddress });
+
+  return userEmail;
+};
+
+getUserDOB = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
+
+  let userDOB = await contractInstance.methods
+    .getDOB()
+    .call({ from: _verifierAccountAddress });
+
+  return userDOB;
+};
+
+getUserCountry = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
+
+  let userCountry = await contractInstance.methods
+    .getCountry()
+    .call({ from: _verifierAccountAddress });
+
+  return userCountry;
+};
+
+getUserMobile = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
+
+  let userMobile = await contractInstance.methods
+    .getMobile()
+    .call({ from: _verifierAccountAddress });
+
+  return userMobile;
+};
+
+getUserGender = async (_userSmartContractAddress, _verifierAccountAddress) => {
+  let contractInstance = new web3.eth.Contract(
+    userContract.abi,
+    _userSmartContractAddress
+  );
+
+  let userGender = await contractInstance.methods
+    .getGender()
+    .call({ from: _verifierAccountAddress });
+
+  return userGender;
+};
+
+module.exports = {
+  deployContract,
+  getVerifiedToken,
+  getUserName,
+  getUserEmail,
+  getUserDOB,
+  getUserCountry,
+  getUserMobile,
+  getUserGender,
+};

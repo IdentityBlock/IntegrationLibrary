@@ -2,8 +2,16 @@ const qrgen = require("qrcode");
 const fs = require("fs");
 const crypto = require("crypto");
 
-const deployContract = require("./contract");
-const getVerifiedToken = require("./contract");
+const {
+  deployContract,
+  getVerifiedToken,
+  getUserName,
+  getUserEmail,
+  getUserDOB,
+  getUserCountry,
+  getUserMobile,
+  getUserGender,
+} = require("./contract");
 
 /**
  *
@@ -51,7 +59,14 @@ async function getQR(_verifierName) {
   );
 
   const token =
-    new Date().toISOString() + crypto.randomBytes(22).toString("hex");
+    new Date().toISOString() +
+    crypto
+      .getTokenVerified(
+        "2022-11-16T09:08:24.173Zc76a65e4203bd790d8d47f6d3dcb59a5bb8ba2b97a5",
+        ["name", "email", "gender"]
+      )
+      .then(console.log);
+  randomBytes(22).toString("hex");
   const qrData =
     '{"verifier-name": "' +
     _verifierName +
@@ -86,8 +101,6 @@ async function getTokenVerified(_token, _listOfDataFields) {
     deployedContract["contract-address"]
   );
 
-  // console.log(response);
-
   if (response == "PENDING" || response == "REJECTED") {
     return response;
   }
@@ -95,31 +108,42 @@ async function getTokenVerified(_token, _listOfDataFields) {
 
   for (let _field in _listOfDataFields) {
     let field = _listOfDataFields[_field].toLowerCase();
-    // console.log(field);
     switch (field) {
       case "name":
-        data[field] = "dummy name";
-        // data[field] = await getUserName(response);
+        data[field] = await getUserName(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       case "email":
-        data[field] = "dummy email";
-        // data[field] = await getUserEmail(response);
+        data[field] = await getUserEmail(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       case "dob":
-        data[field] = "dummy DOB";
-        // data[field] = await getUserDOB(response);
+        data[field] = await getUserDOB(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       case "country":
-        data[field] = "dummy country";
-        // data[field] = await getUserCountry(response);
+        data[field] = await getUserCountry(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       case "mobile":
-        data[field] = "dummy mobile";
-        // data[field] = await getUserMobile(response);
+        data[field] = await getUserMobile(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       case "gender":
-        data[field] = "dummy gender";
-        // data[field] = await getUserGender(response);
+        data[field] = await getUserGender(
+          response,
+          deployedContract["verifier-address"]
+        );
         break;
       default:
         data[field] = "cannot fetch from iblock API";
@@ -131,7 +155,3 @@ async function getTokenVerified(_token, _listOfDataFields) {
 exports.loadContract = loadContract;
 exports.getQR = getQR;
 exports.getTokenVerified = getTokenVerified;
-
-// loadContract().then(console.log);
-// getQR().then(console.log)
-// getTokenVerified("sample-token",['sample','fields']).then(console.log)
