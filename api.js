@@ -59,14 +59,7 @@ async function getQR(_verifierName) {
   );
 
   const token =
-    new Date().toISOString() +
-    crypto
-      .getTokenVerified(
-        "2022-11-16T09:08:24.173Zc76a65e4203bd790d8d47f6d3dcb59a5bb8ba2b97a5",
-        ["name", "email", "gender"]
-      )
-      .then(console.log);
-  randomBytes(22).toString("hex");
+    new Date().toISOString() + crypto.randomBytes(22).toString("hex");
   const qrData =
     '{"verifier-name": "' +
     _verifierName +
