@@ -76,7 +76,7 @@ async function getQR(_verifierName) {
     token +
     '"}';
 
-  return await qrgen.toDataURL(qrData);
+  return { qr: await qrgen.toDataURL(qrData), token };
 }
 
 /**
@@ -102,54 +102,54 @@ async function getTokenVerified(_token, _listOfDataFields) {
   );
 
   if (response == "PENDING" || response == "REJECTED") {
-    return response;
+    return { status: response };
   }
-  let data = {};
+  let approvedResponse = { status: "APPROVED", data: {} };
 
   for (let _field in _listOfDataFields) {
     let field = _listOfDataFields[_field].toLowerCase();
     switch (field) {
       case "name":
-        data[field] = await getUserName(
+        approvedResponse.data[field] = await getUserName(
           response,
           deployedContract["verifier-address"]
         );
         break;
       case "email":
-        data[field] = await getUserEmail(
+        approvedResponse.data[field] = await getUserEmail(
           response,
           deployedContract["verifier-address"]
         );
         break;
       case "dob":
-        data[field] = await getUserDOB(
+        approvedResponse.data[field] = await getUserDOB(
           response,
           deployedContract["verifier-address"]
         );
         break;
       case "country":
-        data[field] = await getUserCountry(
+        approvedResponse.data[field] = await getUserCountry(
           response,
           deployedContract["verifier-address"]
         );
         break;
       case "mobile":
-        data[field] = await getUserMobile(
+        approvedResponse.data[field] = await getUserMobile(
           response,
           deployedContract["verifier-address"]
         );
         break;
       case "gender":
-        data[field] = await getUserGender(
+        approvedResponse.data[field] = await getUserGender(
           response,
           deployedContract["verifier-address"]
         );
         break;
       default:
-        data[field] = "cannot fetch from iblock API";
+        approvedResponse.data[field] = "cannot fetch from iblock API";
     }
   }
-  return data;
+  return approvedResponse;
 }
 
 exports.loadContract = loadContract;
