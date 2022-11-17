@@ -14,12 +14,21 @@ const {
 } = require("./contract");
 
 /**
+ * Load ( or deploy and load) the smart contract tied to the verifier.
  *
- * @returns the address of the smart contract related to the caller of the function.
- * If the caller has no smart contract deployed for him,
- *    function creates a new Ethereum account for user,
- *    deploys a new contract from the newly created account,
- *    and returns the address of the new smart contract.
+ * Read the contract address from the 'deployed-contract' file,
+ * or deploy a new contract if the 'deployed-contract' file is not present.
+ *
+ * @returns {JSON} {
+ *
+ * private-key:{String} - Private key of the Ethereum Account Address of the verifier,
+ *
+ * verifier-address: {String} - Ethereum Account Address of the verifier,
+ *
+ * contract-address: {String} - Smart Contract address of the verifier
+ *
+ * }.
+ *
  */
 async function loadContract() {
   if (!fs.existsSync("./deployed-contract")) {
@@ -46,10 +55,19 @@ async function loadContract() {
 }
 
 /**
+ * Get the QR code generated in the format accepted by the 'iBlock Mobile Application'.
  *
  * @param {String} _verifierName The name of the verifying institution.
- * Will be prompted to the user who scans the QR code.
- * @returns QR code URI that contains the details in the format accepts by the iBlock mobile application
+ * Will be prompted to the user who scans the QR code using the 'iBlock Mobile Application'.
+ *
+ * @returns {JSON} {
+ *
+ * qr: {String} - QR code URI that contains the verifier details,
+ *
+ * token: {String} - unique token to the verification
+ *
+ * }.
+ *
  */
 async function getQR(_verifierName) {
   const deployedContract = await JSON.parse(
@@ -73,13 +91,25 @@ async function getQR(_verifierName) {
 }
 
 /**
+ * Get the personal details of a user who scanned and approved a QR code with the given token.
  *
- * @param {String} _token a token previously generated using the iBlock API to identify the verification transaction
- * @param {String[]} _listOfDataFields a list of data fields of users which need to be fetched from the blockchain
+ * If the transaction is not succeeded yet, return "PENDING" as status.
+ *
+ * If the user has rejected permission, return "REJECTED" as status.
+ *
+ * @param {String} _token A token previously generated using the 'iblock-verifier package' to identify the verification transaction.
+ * @param {String[]} _listOfDataFields A list of data fields of users which need to be fetched from the blockchain
+ *
  * currently allows the set of ["name","email","DOB","country","mobile","gender"] only.
- * @returns personal data JSON object of the user who approved to share his personal details for the given token issuer.
- * If the user rejected the permission, 'REJECTED' is returned,
- * If the user has not approved or rejected yet, 'PENDING' is returned.
+ *
+ * @returns {JSON} {
+ *
+ * status: {String} - status of the verification. "PENDING" or "APPROVED" or "REJECTED",
+ *
+ * data(optional): {JSON} - user's data fields fetched from blockchain, only applicable if status is APPROVED.
+ *
+ * }
+ *
  */
 async function getTokenVerified(_token, _listOfDataFields) {
   const deployedContract = await JSON.parse(
