@@ -6,10 +6,23 @@ Uses 'iBlock Mobile Application' to verify the digital identity from user's end.
 
 <dl>
 
-<dt><a href="https://github.com/IdentityBlock/">github repository of the project<a><dt>
+<dt><a href="https://github.com/IdentityBlock/">github repository of the project</a><dt>
 
 </dl>
 
+## How to use
+
+Install the 'iblock-verifier' package on your backend server source code using
+
+`npm install iblock-verifier`
+
+Include the following variables in your `.env` file, or in the environment variables where your server is hosted. Refer the `.env.example` inside the 'iblock-verifier' package in the node modules folder.
+
+`FUNDING_ACCOUNT="**private key of the account used to fund the newly created accounts **"`
+
+Integrate the below explained functions to use the 'iBlock Person Verification Platform' in your web server.
+
+If you are restoring the integration of 'iBlock Person Verification Platform', create a file name `deployed-contract` on your backend server with the details of your previously deployed smart contract. Refer `deployed-contract.example` file for the format.
 ## Functions
 
 <dl>

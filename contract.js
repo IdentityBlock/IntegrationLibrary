@@ -6,8 +6,10 @@
 const Web3 = require("web3");
 require("dotenv").config();
 
+const IBLOCK_WSURL="https://goerli.infura.io/v3/8b9d3fdeaccc4be4aeea708c77476676" // url where the iblock platform is running
+
 const web3 = new Web3(
-  new Web3.providers.HttpProvider(process.env.IBLOCK_WSURL)
+  new Web3.providers.HttpProvider(IBLOCK_WSURL)
 );
 
 const contract = require("./bin/Verifier.json");
@@ -28,7 +30,7 @@ deployContract = async () => {
       value: "500000000000000000", // equivalent to 0.5 ether
       gas: 2000000,
     },
-    process.env.fundingAccount
+    process.env.FUNDING_ACCOUNT
   );
   const initialRecipt = await web3.eth.sendSignedTransaction(
     initialTxSign.rawTransaction
