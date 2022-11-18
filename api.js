@@ -1,6 +1,7 @@
 const qrgen = require("qrcode");
 const fs = require("fs");
 const crypto = require("crypto");
+require("dotenv").config();
 
 const {
   deployContract,
@@ -13,6 +14,13 @@ const {
   getUserGender,
 } = require("./contract");
 
+/**
+ * Check for the verifier contract address details in the .env
+ * @returns {Bool}
+ */
+function isInConfigs() {
+  return(process.env.IBLOCK_VERIFIER_PRIVATE_KEY && process.env.IBLOCK_VERIFIER_ADDRESS && process.env.IBLOCK_VERIFIER_CONTRACT_ADDRESS)
+}
 /**
  * Load ( or deploy and load) the smart contract tied to the verifier.
  *
@@ -31,6 +39,9 @@ const {
  *
  */
 async function loadContract() {
+  if (isInConfigs()) {
+    return({"private-key": process.env.IBLOCK_VERIFIER_PRIVATE_KEY,"verifier-address": process.env.IBLOCK_VERIFIER_ADDRESS,"contract-address": process.env.IBLOCK_VERIFIER_CONTRACT_ADDRESS})
+  }
   if (!fs.existsSync("./deployed-contract")) {
     return deployContract()
       .then((depObj) => {
@@ -70,11 +81,17 @@ async function loadContract() {
  *
  */
 async function getQR(_verifierName) {
-  const deployedContract = await JSON.parse(
-    fs.readFileSync("./deployed-contract", {
-      encoding: "utf8",
-    })
-  );
+  let deployedContract;
+  if (isInConfigs()) {
+    deployedContract = {"private-key": process.env.IBLOCK_VERIFIER_PRIVATE_KEY,"verifier-address": process.env.IBLOCK_VERIFIER_ADDRESS,"contract-address": process.env.IBLOCK_VERIFIER_CONTRACT_ADDRESS}
+  }
+  else {
+    deployedContract = await JSON.parse(
+      fs.readFileSync("./deployed-contract", {
+        encoding: "utf8",
+      })
+      );
+    }
 
   const token =
     new Date().toISOString() + crypto.randomBytes(22).toString("hex");
@@ -112,11 +129,17 @@ async function getQR(_verifierName) {
  *
  */
 async function getTokenVerified(_token, _listOfDataFields) {
-  const deployedContract = await JSON.parse(
-    fs.readFileSync("./deployed-contract", {
-      encoding: "utf8",
-    })
-  );
+  let deployedContract;
+  if (isInConfigs()) {
+    deployedContract = {"private-key": process.env.IBLOCK_VERIFIER_PRIVATE_KEY,"verifier-address": process.env.IBLOCK_VERIFIER_ADDRESS,"contract-address": process.env.IBLOCK_VERIFIER_CONTRACT_ADDRESS}
+  }
+  else {
+    deployedContract = await JSON.parse(
+      fs.readFileSync("./deployed-contract", {
+        encoding: "utf8",
+      })
+      );
+    }
 
   const response = await getVerifiedToken(
     _token,

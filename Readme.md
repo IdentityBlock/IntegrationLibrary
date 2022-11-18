@@ -22,7 +22,13 @@ Include the following variables in your `.env` file, or in the environment varia
 
 Integrate the below explained functions to use the 'iBlock Person Verification Platform' in your web server.
 
-If you are restoring the integration of 'iBlock Person Verification Platform', create a file name `deployed-contract` on your backend server with the details of your previously deployed smart contract. Refer `deployed-contract.example` file for the format.
+If you are restoring the integration of 'iBlock Person Verification Platform', add the following fields to your `.env` with the details of your already deployed smart contract addresses.
+
+`IBLOCK_VERIFIER_PRIVATE_KEY`
+`IBLOCK_VERIFIER_ADDRESS`
+`IBLOCK_VERIFIER_CONTRACT_ADDRESS`
+
+ Refer `.env.example` file for the format.
 ## Functions
 
 <dl>
