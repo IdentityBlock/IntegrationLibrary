@@ -28,14 +28,6 @@ describe("Unit testing of contract.js", () => {
     it("Test 1", async () => {
       assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
     });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
   });
   
   describe( "getUserEmail function", () => {
@@ -45,14 +37,6 @@ describe("Unit testing of contract.js", () => {
       
     it("Test 1", async () => {
       assert.equal(await getUserEmail("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "kasunisuranga.19@cse.mrt.ac.lk");
-    });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
     });
   });
 
@@ -64,14 +48,6 @@ describe("Unit testing of contract.js", () => {
     it("Test 1", async () => {
       assert.equal(await getUserDOB("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "2000-01-12");
     });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
   });
   
   describe( "getUserCountry function", () => {
@@ -81,14 +57,6 @@ describe("Unit testing of contract.js", () => {
       
     it("Test 1", async () => {
       assert.equal(await getUserCountry("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Sri Lanka");
-    });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
     });
   });
 
@@ -100,14 +68,6 @@ describe("Unit testing of contract.js", () => {
     it("Test 1", async () => {
       assert.equal(await getUserMobile("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "+94711009825");
     });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
   });
   
   describe( "getUserGender function", () => {
@@ -118,18 +78,10 @@ describe("Unit testing of contract.js", () => {
     it("Test 1", async () => {
       assert.equal(await getUserGender("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Male");
     });
-  
-    it("Test 2", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
-
-    it("Test 3", async () => {
-        assert.equal(await getUserName("0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1", "0xe43FD05d7E2257e2265099cf5Fe87602a6DEfE91"), "Kasun Isuranga");
-    });
   });
 });
 
-/*getUserName("0x417fB7b824D97f4554aD61A97d254c24f7C84d20", "0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1").then((data) => {
+getUserName("0x417fB7b824D97f4554aD61A97d254c24f7C84d20", "0x6102Fb1Caea3Ab5ED5a8Ac844BdB7F28bc8363D1").then((data) => {
         console.log(data)
     }
-);*/
+);
